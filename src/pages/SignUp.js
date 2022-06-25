@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 import styled from 'styled-components'
@@ -6,19 +7,28 @@ import Button from '../components/UI/Button'
 import { Input } from '../components/UI/Input'
 import { ReactComponent as VisibilityOnIcon } from '../assets/icons/visibilityOn.svg'
 import { ReactComponent as VisibilityOffIcon } from '../assets/icons/visibilityOff.svg'
+import { signup } from '../store/authSlice'
 
 export const SignUp = () => {
+   const dispatch = useDispatch()
+
    const [visibility, setVisibility] = useState(false)
 
    const togglePasswordHandler = () => {
       setVisibility((prevVisibility) => !prevVisibility)
    }
 
-   const submitHandler = () => {}
+   const submitHandler = (formValue) => {
+      dispatch(signup(formValue))
+   }
    const validationSchema = yup.object({
-      nickName: yup.string().required('Nick обязателен'),
+      username: yup.string().required('Nick обязателен'),
       firstName: yup.string().required('Имя обязательно'),
       lastName: yup.string().required('Фамилия обязательна'),
+      email: yup
+         .string('Введите почту')
+         .email('Введите корректную почту')
+         .required('Почта обязательна'),
       password: yup
          .string()
          .min(8, 'Пароль должен состоять минимум из 8 слов')
@@ -27,9 +37,10 @@ export const SignUp = () => {
 
    const formik = useFormik({
       initialValues: {
-         nickName: '',
+         username: '',
          firstName: '',
          lastName: '',
+         email: '',
          password: '',
       },
       validationSchema,
@@ -37,7 +48,9 @@ export const SignUp = () => {
    })
 
    const errorMessage = () => {
-      const errorValidation = formik.touched.password && formik.errors.password
+      const errorValidation =
+         (formik.touched.email && formik.errors.email) ||
+         (formik.touched.password && formik.errors.password)
 
       return errorValidation
    }
@@ -47,14 +60,14 @@ export const SignUp = () => {
          <h1>Регистрация нового пользователя</h1>
          <Form onSubmit={formik.handleSubmit}>
             <Div>
-               <label htmlFor="nickName">Введите nickname</label>
+               <label htmlFor="username">Введите nickname</label>
                <Input
                   type="text"
-                  id="nickName"
-                  value={formik.values.nickName}
+                  id="username"
+                  value={formik.values.username}
                   onChange={formik.handleChange}
                   error={
-                     formik.touched.nickName && Boolean(formik.errors.nickName)
+                     formik.touched.username && Boolean(formik.errors.username)
                   }
                />
             </Div>
@@ -81,6 +94,16 @@ export const SignUp = () => {
                   }
                />
             </Divv>
+            <Div>
+               <label htmlFor="email">Введите почту</label>
+               <Input
+                  type="email"
+                  id="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+               />
+            </Div>
             <Div>
                <label htmlFor="password">Введите пароль</label>
                <Input
