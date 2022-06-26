@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ROUTES } from '../utils/constants/general'
+import { SignupModal } from '../components/SignupModal'
 import { ReactComponent as Logo } from '../assets/icons/logo.svg'
 
 export const Header = () => {
+   const [toggleSignupModal, setSignupModal] = useState(false)
+
+   const toggleSignupHandler = () => {
+      setSignupModal((prevState) => !prevState)
+   }
    return (
       <StyledHeader>
+         {toggleSignupModal && <SignupModal onConfirm={toggleSignupHandler} />}
          <Logo />
          <StyledNav>
             <Link to={ROUTES.MAIN} className="link">
@@ -24,9 +31,9 @@ export const Header = () => {
             <Link to={ROUTES.CONTACTS} className="link">
                Contacts
             </Link>
-            <Link to={ROUTES.SIGN_UP} className="signLink">
+            <p className="signLink" onClick={toggleSignupHandler}>
                Sign in
-            </Link>
+            </p>
          </StyledNav>
       </StyledHeader>
    )

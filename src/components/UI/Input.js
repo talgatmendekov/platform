@@ -11,12 +11,13 @@ export const Input = ({
    return (
       <TextField
          style={{
-            width: '300px',
+            width: '220px',
+            // height: '45px',
             border: '2px solid #242831',
             borderRadius: '8px',
          }}
          sx={{
-            input: { color: '#FFFFFF', fontSize: '16px' },
+            input: { color: '#FFFFFF', fontSize: '16px', height: '15px' },
          }}
          placeholder={placeholder}
          fullWidth={fullWidth}
